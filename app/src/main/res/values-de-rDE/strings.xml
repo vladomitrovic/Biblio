@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Biblio</string>
+    <string name="book">Buch</string>
+    <string name="Author">Autor</string>
+    <string name="categories">kategorien</string>
+    <string name="title">Titel</string>
+    <string name="day">Datum</string>
+    <string name="title_author">Autor</string>
+    <string name="categorie">kategorie</string>
+    <string name="summary">Zusammenfassung</string>
+    <string name="lastname">Name</string>
+    <string name="surname">Vorname</string>
+    <string name="titleBook">Titel</string>
+    <string name="date">Datum</string>
+    <string name="bdate">Geburtsdatum</string>
+    <string name="firstname">Name</string>
+    <string name="rellayExit">Drücken Sie auf mehr Zeit, um zu beenden</string>
+    <string name="BookSaved">Dieses Buch wurde der Liste hinzugefügt.</string>
+    <string name="CategorySaved">Diese Kategorie wurde gespeichert</string>
+    <string name="AuthorSaved">Dieser Autor wurde gespeichert</string>
+    <string name="FillAll">Alle Felder müssen ausgefüllt werden</string>
+    <string name="datePublication">Veröffentlichungsdatum</string>
+    <string name="UpdateSaved">Dieser Artikel wurde aktualisiert</string>
+    <string name="itemDeleted">Dieser Artikel wurde aktualisiert</string>
+    <string name="Bookmanager">Book Manager</string>
+    <string name="ok">Ok</string>
+    <string name="search">Suchen</string>
+    <string name="open">Offnen</string>
+    <string name="Hello">Hallo !</string>
+    <string name="german">Deutsch</string>
+    <string name="french">Französisch</string>
+    <string name="english">Englisch</string>
+    <string name="italian">Italienisch</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über uns</string>
+    <string name="close">Geschlossen</string>
+    <string name="aboutUs">Diese Anwendung wurde von Caroline und Vlado für das Modul 644-1 Mobile Development zum Thema Buch entwickelt.</string>
+    <string name="languageChanged">"Die Sprache wurde aktualisiert. "</string>
+    <string name="language">Sprache</string>
+    <string name="bio">Biografie</string>
+    <string name="catORauthNull">Sie müssen eine Kategorie und einen Autor haben, um ein Buch zu erstellen.</string>
+</resources>

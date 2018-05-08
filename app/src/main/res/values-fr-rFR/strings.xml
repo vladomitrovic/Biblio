@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Biblio</string>
+    <string name="book">Livre</string>
+    <string name="Author">Auteur</string>
+    <string name="categories">Categories</string>
+    <string name="title">Titre</string>
+    <string name="day">Date</string>
+    <string name="title_author">Auteur</string>
+    <string name="categorie">Categorie</string>
+    <string name="summary">Résumé</string>
+    <string name="lastname">Nom</string>
+    <string name="surname">Prénom</string>
+    <string name="titleBook">Titre</string>
+    <string name="date">Date</string>
+    <string name="bdate">Date de naissance</string>
+    <string name="firstname">Prénom</string>
+    <string name="rellayExit">Appuiez encore une fois pour quitter</string>
+    <string name="BookSaved">Ce livre a été ajouté à la liste.</string>
+    <string name="CategorySaved">Cette catégorie a été sauvegardé</string>
+    <string name="AuthorSaved">Cet auteur à été sauvegardé</string>
+    <string name="FillAll">Tout les champs doivent être remplis</string>
+    <string name="datePublication">Date de la publication</string>
+    <string name="UpdateSaved">Les changements ont été sauvegardé</string>
+    <string name="itemDeleted">Les changements ont été sauvegardé</string>
+    <string name="french">Français</string>
+    <string name="german">Allemand</string>
+    <string name="english">Anglais</string>
+    <string name="italian">Italien</string>
+    <string name="settings">Réglages</string>
+    <string name="about">A propos</string>
+    <string name="Bookmanager">Book Manager</string>
+    <string name="open">Ouvert</string>
+    <string name="close">Fermé</string>
+    <string name="search">Rechercher</string>
+    <string name="ok">Ok</string>
+    <string name="aboutUs">Cette application a été developpé par Caroline et Vlado pour le module 644-1 Mobile developpement sur le thème "Livre".
+</string>
+    <string name="Hello">Bonjour !</string>
+    <string name="languageChanged">La langue a été mise à jour.</string>
+    <string name="language">Langue</string>
+    <string name="bio">Biographie</string>
+    <string name="catORauthNull">Vous devez avoir une catégorie et un auteur pour créer un livre.</string>
+</resources>

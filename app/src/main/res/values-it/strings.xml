@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Biblio</string>
+    <string name="book">Libro</string>
+    <string name="Author">Autore</string>
+    <string name="categories">Categorie</string>
+    <string name="title">Titolo</string>
+    <string name="day">Data</string>
+    <string name="title_author">Autore</string>
+    <string name="categorie">Categoria</string>
+    <string name="summary">Summario</string>
+    <string name="lastname">Cognome</string>
+    <string name="surname">Nome</string>
+    <string name="titleBook">Titolo</string>
+    <string name="date">Data</string>
+    <string name="bdate">Data de nascita</string>
+    <string name="firstname">Cognome</string>
+    <string name="rellayExit">Premi più tempo per uscire</string>
+    <string name="BookSaved">Questo libro è stato aggiunto alla lista.</string>
+    <string name="CategorySaved">Questa categoria è stata salvata</string>
+    <string name="AuthorSaved">Questo autore è stato salvato</string>
+    <string name="FillAll">Tutto il campo deve essere riempito</string>
+    <string name="datePublication">Data di publicazion</string>
+    <string name="UpdateSaved">Questo oggetto è stato aggiornato</string>
+    <string name="itemDeleted">Questo oggetto è stato aggiornato</string>
+    <string name="Bookmanager">Book Manager</string>
+    <string name="ok">Ok</string>
+    <string name="search">Ricercare</string>
+    <string name="close">Ciuso</string>
+    <string name="Hello">Ciao !</string>
+    <string name="french">Francese</string>
+    <string name="german">"Tedesco "</string>
+    <string name="english">Inglese</string>
+    <string name="italian">Italiano</string>
+    <string name="settings">Impostazioni</string>
+    <string name="about">Chi siamo</string>
+    <string name="open">aperto</string>
+    <string name="aboutUs">"Questa applicazione è stata sviluppata da Caroline e Vlado per il modulo 644-1 Mobile Development sul tema Book. "</string>
+    <string name="languageChanged">"La lingua è stata aggiornata. "</string>
+    <string name="language">Lingua</string>
+    <string name="bio">Biografia</string>
+    <string name="catORauthNull">Devi avere una categoria e un autore per creare un libro.</string>
+</resources>
