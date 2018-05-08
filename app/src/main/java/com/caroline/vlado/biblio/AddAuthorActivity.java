@@ -74,7 +74,7 @@ public class AddAuthorActivity extends AppCompatActivity {
                         dp_date.setText(courseDate);
                     }
 
-                    //format the date in string
+                    //format the date in string.
                     private String formatDateString(String dateString) {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
                         Date date;
