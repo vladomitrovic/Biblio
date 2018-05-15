@@ -2,15 +2,14 @@ package com.caroline.vlado.biblio;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.caroline.vlado.biblio.Model.Category;
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
 
 import java.text.ParseException;
@@ -67,10 +66,10 @@ public class DetailsAuthorActivity extends AppCompatActivity {
         deleteToast = Toast.makeText(this, getString(R.string.itemDeleted), Toast.LENGTH_SHORT);
 
         //get idAuthor from previous activity
-        int idAuthor = getIntent().getIntExtra("idAuthor", -1);
+        int idAuthor = 0;
 
         //get the details from the database
-        thisAuthor = MainActivity.db.autorDao().getById(idAuthor);
+        thisAuthor = null;
 
         //set the editText from details
         et_fistname.setText(thisAuthor.getFirstName());
@@ -114,7 +113,6 @@ public class DetailsAuthorActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.db.autorDao().delete(thisAuthor);
                 deleteToast.show();
                 onBackPressed();
             }
@@ -143,7 +141,6 @@ public class DetailsAuthorActivity extends AppCompatActivity {
 
 
                 //update in database
-                MainActivity.db.autorDao().update(thisAuthor);
 
                 //switch to view mode
                 delete.setEnabled(false);
@@ -195,7 +192,6 @@ public class DetailsAuthorActivity extends AppCompatActivity {
                         }
                         return dateString;
                     }
-                    ;
                 }, year, month, day);
                 datePickerDialog.show();
             }

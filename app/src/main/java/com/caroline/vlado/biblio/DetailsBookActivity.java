@@ -2,9 +2,9 @@ package com.caroline.vlado.biblio;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -72,13 +72,13 @@ public class DetailsBookActivity extends AppCompatActivity {
         seeAuthor = findViewById(R.id.seeAuthors);
 
         //add items in the listView category
-        ArrayList<CategoryEntity> categories = (ArrayList<CategoryEntity>)MainActivity.db.categoryDao().getAllS();
+        ArrayList<CategoryEntity> categories = null;
         ArrayAdapter<CategoryEntity> dataAdapterCategories = new ArrayAdapter<CategoryEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, categories);
         dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         category.setAdapter(dataAdapterCategories);
 
         //add items in the listView author
-        ArrayList<AutorEntity> authors = (ArrayList<AutorEntity>)MainActivity.db.autorDao().getAll();
+        ArrayList<AutorEntity> authors = null;
         ArrayAdapter<AutorEntity> dataAdapterAuthor = new ArrayAdapter<AutorEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, authors);
         dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         author.setAdapter(dataAdapterAuthor);
@@ -89,9 +89,9 @@ public class DetailsBookActivity extends AppCompatActivity {
         int idCategory = getIntent().getIntExtra("idCategory", -1);
 
         //get the details from the database
-        thisBook = MainActivity.db.bookDao().getById(idBook);
-        thisAuthor = MainActivity.db.autorDao().getById(idAuthor);
-        thisCategory = MainActivity.db.categoryDao().getById(idCategory);
+        thisBook = null;
+        thisAuthor = null;
+        thisCategory = null;
 
         // instance of toast
         errorToast = Toast.makeText(this, getString(R.string.FillAll), Toast.LENGTH_SHORT);
@@ -141,7 +141,7 @@ public class DetailsBookActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.db.bookDao().delete(thisBook);
+
                 deleteToast.show();
                 onBackPressed();
             }
@@ -164,15 +164,14 @@ public class DetailsBookActivity extends AppCompatActivity {
                 thisBook.setTitle(et_Title.getText().toString());
                 thisBook.setSummary(et_Summary.getText().toString());
                 thisBook.setDate(dp_date.getText().toString());
-                thisBook.setFkAuthor(((AutorEntity)author.getSelectedItem()).getIdAutor());
-                thisBook.setFkCategory(((Category)category.getSelectedItem()).getIdCategory());
+                thisBook.setIdAuthor(((AutorEntity) author.getSelectedItem()).getIdAutor());
+                thisBook.setIdCategory(((Category) category.getSelectedItem()).getIdCategory());
 
                 System.out.println(thisBook.getSummary()+"-----"+thisBook.getTitle()+"-------------------");
 
 
 
                 //update in database
-                MainActivity.db.bookDao().update(thisBook);
 
                 //switch to view mode
                 delete.setEnabled(false);
@@ -196,7 +195,7 @@ public class DetailsBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailsBookActivity.this, DetailsAuthorActivity.class);
-                intent.putExtra("idAuthor", thisBook.getFkAuthor());
+                intent.putExtra("idAuthor", thisBook.getAuthor());
                 startActivity(intent);
             }
         });
@@ -236,7 +235,6 @@ public class DetailsBookActivity extends AppCompatActivity {
                         }
                         return dateString;
                     }
-                    ;
                 }, year, month, day);
                 datePickerDialog.show();
             }

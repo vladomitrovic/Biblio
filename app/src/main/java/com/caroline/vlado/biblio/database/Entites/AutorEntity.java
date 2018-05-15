@@ -1,55 +1,56 @@
 package com.caroline.vlado.biblio.database.Entites;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
+
 import android.support.annotation.NonNull;
-import com.caroline.vlado.biblio.Model.*;
 
-import java.util.Date;
+import com.caroline.vlado.biblio.Model.Author;
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
-
-/**
- * https://developer.android.com/reference/android/arch/persistence/room/Entity.html
- */
-@Entity(tableName = "Authors")
 public class AutorEntity implements Author {
 
+    @Exclude
     @NonNull
-    @PrimaryKey (autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private Integer IdAutor;
+    private String idAuthor;
 
-    @ColumnInfo(name = "firstname")
+
     private String firstName;
 
-    @ColumnInfo(name = "lastname")
+
     private String lastName;
 
-    @ColumnInfo(name = "biography")
+
     private String biography;
 
-    @ColumnInfo(name = "birthday")
+
     private String birthday;
+
+
+    private Map<String, Boolean> books = new HashMap<String, Boolean>();
 
 
     public AutorEntity() {
     }
 
-    public AutorEntity(String firstName, String lastName, String biography, String birthday) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.biography = biography;
-        this.birthday = birthday;
+    public AutorEntity(Author author) {
+        this.firstName = author.getFirstName();
+        this.lastName = author.getLastName();
+        this.biography = author.getBiography();
+        this.birthday = author.getBirthday();
     }
+
 
     @Override
-    public Integer getIdAutor() {
-        return IdAutor;
+    public String getIdAutor() {
+        return idAuthor;
     }
 
-    public void setIdAutor(Integer idAutor) { this.IdAutor = idAutor; }
+    public void setIdAuthor(String idAuthor) {
+        this.idAuthor = idAuthor;
+    }
 
     @Override
     public String getFirstName() {
@@ -69,14 +70,6 @@ public class AutorEntity implements Author {
         this.lastName = lastName;
     }
 
-    @Override
-    public String getBiography() {
-        return biography;
-    }
-
-    public void setBiography(String biography) {
-        this.biography = biography;
-    }
 
     @Override
     public String getBirthday() {
@@ -87,7 +80,35 @@ public class AutorEntity implements Author {
         this.birthday = birthday;
     }
 
+    @Override
+    public String getBiography() {
+        return biography;
+    }
 
+    public void setBiography(String biography) {
+        this.biography = biography;
+    }
+
+    @Override
+    public Map<String, Boolean> getBooks() {
+        return null;
+    }
+
+    public void setBooks(Map<String, Boolean> books) {
+        this.books = books;
+    }
+
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("firstName", firstName);
+        result.put("lastName", lastName);
+        result.put("birthday", birthday);
+        result.put("biography", biography);
+        result.put("books", books);
+        return result;
+    }
 
 
 
@@ -104,6 +125,8 @@ public class AutorEntity implements Author {
     public String toString() {
         return lastName+" "+firstName ;
     }
+
+
 }
 
 

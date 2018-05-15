@@ -1,50 +1,74 @@
 package com.caroline.vlado.biblio.database.Entites;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-import com.caroline.vlado.biblio.Model.*;
 
-@Entity(tableName = "Categories")
+import android.support.annotation.NonNull;
+
+import com.caroline.vlado.biblio.Model.Category;
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
 public class CategoryEntity implements Category {
 
 
         @NonNull
-        @PrimaryKey (autoGenerate = true)
-        @ColumnInfo(name = "id")
-        private int IdCategory;
+        private String idCategory;
 
-        @ColumnInfo(name = "category_name")
         private String categoryName;
 
+    private Map<String, Boolean> books = new HashMap<String, Boolean>();
 
-        public CategoryEntity() {
+
+    public CategoryEntity() {
+
         }
 
+    public CategoryEntity(Category category) {
+        idCategory = category.getIdCategory();
+        categoryName = category.getCategoryName();
+        books = category.getBooks();
+    }
 
-        @Override
-        public Integer getIdCategory() {
-            return IdCategory;
-        }
+    @Exclude
+    @Override
+    public String getIdCategory() {
+        return idCategory;
+    }
 
-        public void setIdCategory(Integer idCategory) { this.IdCategory = idCategory; }
+    public void setIdCategory(@NonNull String idCategory) {
+        this.idCategory = idCategory;
+    }
 
-        @Override
-        public String getCategoryName() {
-            return categoryName;
-        }
-
-        public void setCategoryName(String categoryName) {
-            this.categoryName = categoryName;
-        }
+    @Override
+    public String getCategoryName() {
+        return categoryName;
+    }
 
 
-        @Ignore
-        public CategoryEntity(String categoryName) {
+    public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-     }
+    }
+
+    @Override
+    public Map<String, Boolean> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Map<String, Boolean> books) {
+        this.books = books;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("categoryName", categoryName);
+        result.put("books", books);
+        return result;
+    }
+
+
 
     @Override
         public boolean equals(Object obj) {
@@ -59,4 +83,5 @@ public class CategoryEntity implements Category {
     public String toString() {
         return categoryName;
     }
+
 }

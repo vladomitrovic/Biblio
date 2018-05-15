@@ -1,11 +1,14 @@
 package com.caroline.vlado.biblio.Model;
 
 public interface Book {
-    Integer getIdBook();
+    String getIdBook();
     String getTitle();
-    String getSummary();
-    Integer getPages();
     String getDate();
 
+    String getAuthor();
+
+    String getCategory();
+
+    String getSummary();
 
 }

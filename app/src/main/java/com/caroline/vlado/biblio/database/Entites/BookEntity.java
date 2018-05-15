@@ -1,97 +1,50 @@
 package com.caroline.vlado.biblio.database.Entites;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
+
 import android.support.annotation.NonNull;
 
-import com.caroline.vlado.biblio.Model.*;
+import com.caroline.vlado.biblio.Model.Book;
+import com.google.firebase.database.Exclude;
 
-/**
- * https://developer.android.com/reference/android/arch/persistence/room/Entity.html
- * <p>
- * interesting: owner column references a foreign key, that's why this column is indexed.
- * If not indexed, it might trigger full table scans whenever parent table is modified so you are
- * highly advised to create an index that covers this column.
- */
+import java.util.HashMap;
+import java.util.Map;
 
 
-
-@Entity(tableName = "Books",
-        foreignKeys ={
-        @ForeignKey(
-
-                entity = AutorEntity.class, parentColumns = "id", childColumns = "fk_author", onDelete = ForeignKey.CASCADE),
-        @ForeignKey(
-
-                entity = AutorEntity.class, parentColumns = "id", childColumns = "fk_author", onDelete = ForeignKey.CASCADE)},
-        indices = {
-                @Index(
-                        value = {"fk_author"}
-                )}
-)
 public class BookEntity implements Book {
 
     @NonNull
-    @PrimaryKey (autoGenerate = true)
-    @ColumnInfo(name = "id")
-    private int idBook;
+    private String idBook;
 
-    @ColumnInfo(name = "title")
     private String title;
 
-    @ColumnInfo(name = "pages")
-    private int pages;
-
-    @ColumnInfo(name = "date")
     private String date;
 
-    @ColumnInfo(name = "summary")
+    private String idAuthor;
+
+    private String idCategory;
+
     private String summary;
 
-    public int getFkAuthor() {
-        return fkAuthor;
-    }
-
-    public void setFkAuthor(int fkAuthor) {
-        this.fkAuthor = fkAuthor;
-    }
-
-    @ColumnInfo(name = "fk_author")
-    private int fkAuthor;
-
-    @ColumnInfo(name ="fk_category")
-    private int fkCategory;
-
-    public int getFkCategory() {
-        return fkCategory;
-    }
-
-    public void setFkCategory(int fkCategory) {
-        this.fkCategory = fkCategory;
-    }
 
     public BookEntity() {
+
     }
 
-    @Ignore
-    public BookEntity(String title, int pages, String date, String summary, int fkAuthor) {
-        this.title = title;
-        this.pages = pages;
-        this.date = date;
-        this.summary = summary;
-        this.fkAuthor=fkAuthor;
+    public BookEntity(Book book) {
+        this.title = book.getTitle();
+        this.date = book.getDate();
+        this.summary = book.getSummary();
+        this.idAuthor = book.getAuthor();
+        this.idCategory = book.getCategory();
     }
 
+    @Exclude
     @Override
-    public Integer getIdBook() {
+    public String getIdBook() {
         return idBook;
     }
 
-    public void setIdBook(Integer idBook) {
+    public void setIdBook(@NonNull String idBook) {
         this.idBook = idBook;
     }
 
@@ -105,15 +58,6 @@ public class BookEntity implements Book {
     }
 
     @Override
-    public Integer getPages() {
-        return pages;
-    }
-
-    public void setPages(Integer pages) {
-        this.pages = pages;
-    }
-
-    @Override
     public String getDate() {
         return date;
     }
@@ -123,12 +67,40 @@ public class BookEntity implements Book {
     }
 
     @Override
+    public String getAuthor() {
+        return idAuthor;
+    }
+
+    public void setIdAuthor(String idAuthor) {
+        this.idAuthor = idAuthor;
+    }
+
+    @Override
+    public String getCategory() {
+        return idCategory;
+    }
+
+    public void setIdCategory(String idCategory) {
+        this.idCategory = idCategory;
+    }
+
+    @Override
     public String getSummary() {
         return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("title", title);
+        result.put("idAuthor", idAuthor);
+        result.put("idCategory", idCategory);
+        result.put("summary", summary);
+        return result;
     }
 
     @Override
@@ -144,4 +116,6 @@ public class BookEntity implements Book {
     public String toString() {
         return title;
     }
+
+
 }

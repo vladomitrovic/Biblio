@@ -1,11 +1,15 @@
 package com.caroline.vlado.biblio.Model;
 
+import java.util.Map;
+
 public interface Author {
-    Integer getIdAutor ();
+    String getIdAutor();
     String getFirstName();
     String getLastName();
-    String getBiography();
     String getBirthday();
 
+    String getBiography();
+
+    Map<String, Boolean> getBooks();
 }
 

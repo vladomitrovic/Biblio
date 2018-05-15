@@ -1,10 +1,9 @@
 package com.caroline.vlado.biblio;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -86,7 +85,6 @@ public class AddAuthorActivity extends AppCompatActivity {
                         }
                         return dateString;
                     }
-                    ;
                 }, year, month, day);
                 datePickerDialog.show();
             }
@@ -113,8 +111,6 @@ public class AddAuthorActivity extends AppCompatActivity {
                 newAuthor.setBiography(et_bio.getText().toString());
                 newAuthor.setBirthday(dp_date.getText().toString());
 
-                //insert in the database
-                MainActivity.db.autorDao().insert(newAuthor);
 
                 //info toast
                 toast.show();

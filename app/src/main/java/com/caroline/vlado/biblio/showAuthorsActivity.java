@@ -1,8 +1,8 @@
 package com.caroline.vlado.biblio;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,8 +10,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
-import com.caroline.vlado.biblio.database.Entites.BookEntity;
-import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
 
 import java.util.List;
 
@@ -29,8 +27,8 @@ public class showAuthorsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_authors);
 
         //instance of components
-        searchView = (SearchView)findViewById(R.id.search_bar_author);
-        listAuthors = (ListView)findViewById(R.id.listAuthors);
+        searchView = findViewById(R.id.search_bar_author);
+        listAuthors = findViewById(R.id.listAuthors);
 
         //add items in the listView
         updateListAuthor();
@@ -40,7 +38,7 @@ public class showAuthorsActivity extends AppCompatActivity {
         listAuthors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int authorId = ((AutorEntity) listAuthors.getItemAtPosition(position)).getIdAutor();
+                String authorId = ((AutorEntity) listAuthors.getItemAtPosition(position)).getIdAutor();
 
                 Intent intent = new Intent(showAuthorsActivity.this, DetailsAuthorActivity.class);
                 intent.putExtra("idAuthor", authorId);
@@ -82,7 +80,7 @@ public class showAuthorsActivity extends AppCompatActivity {
 
     //Access database to get all authors
     public List<AutorEntity> getAuthors(){
-        return MainActivity.db.autorDao().getAll();
+        return null;
     }
 
 

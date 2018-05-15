@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "107894653900",
+    "firebase_url": "https://biblio-95ef3.firebaseio.com",
+    "project_id": "biblio-95ef3",
+    "storage_bucket": "biblio-95ef3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107894653900:android:d9ebd8bf68e5bf52",
+        "android_client_info": {
+          "package_name": "com.caroline.vlado.biblio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107894653900-8nv8tn92bv4hs93gat6qfj2b0oq88rp6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.caroline.vlado.biblio",
+            "certificate_hash": "12f2490ac96e0c6f1d11094f384ea2b1f6f7486e"
+          }
+        },
+        {
+          "client_id": "107894653900-dv47sjqp3bp3vfg2hj09oj5bjpo0jdt1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCds3fAF9HHP-4x9ph0kSNMuvy9ufenzLk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107894653900-dv47sjqp3bp3vfg2hj09oj5bjpo0jdt1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

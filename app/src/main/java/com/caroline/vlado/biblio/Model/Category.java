@@ -1,6 +1,10 @@
 package com.caroline.vlado.biblio.Model;
 
+import java.util.Map;
+
 public interface Category {
-    Integer getIdCategory ();
+    String getIdCategory();
     String getCategoryName();
+
+    Map<String, Boolean> getBooks();
 }

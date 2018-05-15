@@ -1,17 +1,14 @@
 package com.caroline.vlado.biblio;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 
-import com.caroline.vlado.biblio.database.Entites.AutorEntity;
 import com.caroline.vlado.biblio.database.Entites.BookEntity;
 
 import java.util.List;
@@ -31,8 +28,8 @@ public class showBooksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_books);
 
         //instance of components
-        searchView = (SearchView)findViewById(R.id.search_bar_book);
-        listBooks = (ListView)findViewById(R.id.listBooks);
+        searchView = findViewById(R.id.search_bar_book);
+        listBooks = findViewById(R.id.listBooks);
 
         //add items in the listView
         updateListBook();
@@ -45,8 +42,8 @@ public class showBooksActivity extends AppCompatActivity {
                 //Open DetailsBookActivity - Pass some values to get the details of the book
                 Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
                 intent.putExtra("idBook", ((BookEntity) listBooks.getItemAtPosition(position)).getIdBook());
-                intent.putExtra("idCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getFkCategory());
-                intent.putExtra("idAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getFkAuthor());
+                intent.putExtra("idCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
+                intent.putExtra("idAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
                 startActivity(intent);
             }
         });
@@ -89,12 +86,12 @@ public class showBooksActivity extends AppCompatActivity {
         }
         //No fkAuthor --> category
         else if(fkAuthor==-1) {
-            searchView.setQueryHint(MainActivity.db.categoryDao().getById(fkCategory).toString());
+
             adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, getFromCategory(fkCategory));
         }
         //Other --> author
         else {
-            searchView.setQueryHint(MainActivity.db.autorDao().getById(fkAuthor).toString());
+
             adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, getFromAuthor(fkAuthor));
         }
         adapter.notifyDataSetChanged();
@@ -104,14 +101,18 @@ public class showBooksActivity extends AppCompatActivity {
 
     //get all books from database
     public List<BookEntity> getBooks(){
-        return MainActivity.db.bookDao().getAll();
+        return null;
     }
 
     //get all books from a specific author
-    public List<BookEntity> getFromAuthor(int idAuthor){return MainActivity.db.bookDao().getBooksByAuthor(idAuthor);}
+    public List<BookEntity> getFromAuthor(int idAuthor) {
+        return null;
+    }
 
     //get all books from a specific category
-    public List<BookEntity> getFromCategory(int idCategory){return MainActivity.db.bookDao().getBooksByCategory(idCategory);}
+    public List<BookEntity> getFromCategory(int idCategory) {
+        return null;
+    }
 
 
 

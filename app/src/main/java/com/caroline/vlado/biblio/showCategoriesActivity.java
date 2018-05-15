@@ -1,22 +1,21 @@
 package com.caroline.vlado.biblio;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.caroline.vlado.biblio.database.Entites.BookEntity;
 import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class showCategoriesActivity extends AppCompatActivity {
+
 
     //Components
     ListView listCategories;
@@ -30,8 +29,8 @@ public class showCategoriesActivity extends AppCompatActivity {
 
 
         //instance of components
-        listCategories = (ListView)findViewById(R.id.listCategories);
-        searchView = (SearchView)findViewById(R.id.search_bar_categories);
+        listCategories = findViewById(R.id.listCategories);
+        searchView = findViewById(R.id.search_bar_categories);
 
 
         //add items in the listView
@@ -68,15 +67,15 @@ public class showCategoriesActivity extends AppCompatActivity {
 
     private void updateListCategories() {
         //add items in the listView
-        adapter = new ArrayAdapter<CategoryEntity>(showCategoriesActivity.this, android.R.layout.simple_list_item_1, getCategories());
-        adapter.notifyDataSetChanged();
+        //adapter = new ArrayAdapter<CategoryEntity>(showCategoriesActivity.this, android.R.layout.simple_list_item_1, getCategories());
+        //adapter.notifyDataSetChanged();
         listCategories.setAdapter(adapter);
 
         //set listener on listView items
         listCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                int categoryId = ((CategoryEntity) listCategories.getItemAtPosition(position)).getIdCategory();
+                String categoryId = ((CategoryEntity) listCategories.getItemAtPosition(position)).getIdCategory();
 
                 Intent intent = new Intent(showCategoriesActivity.this, showBooksActivity.class);
                 intent.putExtra("idCategory", categoryId);
@@ -89,7 +88,11 @@ public class showCategoriesActivity extends AppCompatActivity {
 
     //Access database to get the categories
     public List<CategoryEntity> getCategories(){
-        return MainActivity.db.categoryDao().getAllS();
+
+        List<CategoryEntity> categories = new ArrayList<>();
+        
+
+        return categories;
 }
 
 

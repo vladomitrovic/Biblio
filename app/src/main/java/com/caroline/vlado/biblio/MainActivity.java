@@ -1,34 +1,23 @@
 package com.caroline.vlado.biblio;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.LauncherActivity;
-import android.arch.persistence.room.Room;
-import android.content.ClipData;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.Toast;
 
-import com.caroline.vlado.biblio.database.LocalDatabase;
-
-import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Static database accessible in all activities
-    public  static LocalDatabase db;
 
     //Components
     private DrawerLayout mDrawerLayout;
@@ -44,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loadLastLanguage();
 
-        //instance of static database
-        db = Room.databaseBuilder(getApplicationContext(), LocalDatabase.class, "biblioDB").fallbackToDestructiveMigration().allowMainThreadQueries().build();
 
         //instance of components
         mDrawerLayout = findViewById(R.id.drawer);

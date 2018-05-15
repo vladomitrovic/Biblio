@@ -1,10 +1,9 @@
 package com.caroline.vlado.biblio;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -22,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class AddBookActivity extends AppCompatActivity {
 
@@ -69,13 +67,13 @@ public class AddBookActivity extends AppCompatActivity {
         newBook = new BookEntity();
 
         //add items in the spinner category
-        ArrayList<CategoryEntity> categories = (ArrayList<CategoryEntity>)MainActivity.db.categoryDao().getAllS();
+        ArrayList<CategoryEntity> categories = null;
         ArrayAdapter<CategoryEntity> dataAdapterCategories = new ArrayAdapter<CategoryEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, categories);
         dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         category.setAdapter(dataAdapterCategories);
 
         //add items in the spinner author
-        ArrayList<AutorEntity> authors = (ArrayList<AutorEntity>)MainActivity.db.autorDao().getAll();
+        ArrayList<AutorEntity> authors = null;
         ArrayAdapter<AutorEntity> dataAdapterAuthor = new ArrayAdapter<AutorEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, authors);
         dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         author.setAdapter(dataAdapterAuthor);
@@ -114,7 +112,7 @@ public class AddBookActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         return dateString;
-                    };
+                    }
                 },year,month, day);
                 datePickerDialog.show();
             }
@@ -137,13 +135,11 @@ public class AddBookActivity extends AppCompatActivity {
                 newBook.setTitle(et_Title.getText().toString());
                 newBook.setSummary(et_Summary.getText().toString());
                 newBook.setDate(dp_date.getText().toString());
-                newBook.setFkAuthor(((AutorEntity)author.getSelectedItem()).getIdAutor());
-                newBook.setFkCategory(((Category)category.getSelectedItem()).getIdCategory());
+                    newBook.setIdAuthor(((AutorEntity) author.getSelectedItem()).getIdAutor());
+                    newBook.setIdCategory(((Category) category.getSelectedItem()).getIdCategory());
 
-                //insert in the database
-                MainActivity.db.bookDao().insert(newBook);
 
-                //info toast
+                    //info toast
                 toast.show();
 
                 //back to the list
