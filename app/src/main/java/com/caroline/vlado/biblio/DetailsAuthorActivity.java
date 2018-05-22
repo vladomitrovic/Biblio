@@ -11,6 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,16 +71,30 @@ public class DetailsAuthorActivity extends AppCompatActivity {
         deleteToast = Toast.makeText(this, getString(R.string.itemDeleted), Toast.LENGTH_SHORT);
 
         //get idAuthor from previous activity
-        int idAuthor = 0;
+        final String uidAuthor = getIntent().getStringExtra("uidAuthor");
 
         //get the details from the database
-        thisAuthor = null;
+        FirebaseDatabase.getInstance()
+                .getReference("authors/" + uidAuthor)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            thisAuthor = dataSnapshot.getValue(AutorEntity.class);
+                            //set the editText from details
+                            et_fistname.setText(thisAuthor.getFirstName());
+                            et_lastname.setText(thisAuthor.getLastName());
+                            et_bio.setText(thisAuthor.getBiography());
+                            dp_date.setText(thisAuthor.getBirthday());
+                        }
+                    }
 
-        //set the editText from details
-        et_fistname.setText(thisAuthor.getFirstName());
-        et_lastname.setText(thisAuthor.getLastName());
-        et_bio.setText(thisAuthor.getBiography());
-        dp_date.setText(thisAuthor.getBirthday());
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
 
 
         //disable the unused button and editText to avoid modification
@@ -139,6 +158,17 @@ public class DetailsAuthorActivity extends AppCompatActivity {
                 thisAuthor.setBiography(et_bio.getText().toString());
                 thisAuthor.setBirthday(dp_date.getText().toString());
 
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                database.getReference("authors/" + uidAuthor)
+                        .setValue(thisAuthor, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    doneToast.show();
+                                }
+                            }
+                        });
 
                 //update in database
 
@@ -204,7 +234,7 @@ public class DetailsAuthorActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailsAuthorActivity.this, showBooksActivity.class);
-                intent.putExtra("idAuthor", thisAuthor.getIdAutor());
+                intent.putExtra("uidAuthor", thisAuthor.getUid());
                 startActivity(intent);
             }
         });

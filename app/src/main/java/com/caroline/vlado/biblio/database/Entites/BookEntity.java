@@ -13,15 +13,15 @@ import java.util.Map;
 public class BookEntity implements Book {
 
     @NonNull
-    private String idBook;
+    private String uid;
 
     private String title;
 
     private String date;
 
-    private String idAuthor;
+    private String uidAuthor;
 
-    private String idCategory;
+    private String uidCategory;
 
     private String summary;
 
@@ -34,18 +34,18 @@ public class BookEntity implements Book {
         this.title = book.getTitle();
         this.date = book.getDate();
         this.summary = book.getSummary();
-        this.idAuthor = book.getAuthor();
-        this.idCategory = book.getCategory();
+        this.uidAuthor = book.getAuthor();
+        this.uidCategory = book.getCategory();
     }
 
     @Exclude
     @Override
-    public String getIdBook() {
-        return idBook;
+    public String getUid() {
+        return uid;
     }
 
-    public void setIdBook(@NonNull String idBook) {
-        this.idBook = idBook;
+    public void setUid(@NonNull String uidBook) {
+        this.uid = uidBook;
     }
 
     @Override
@@ -68,20 +68,20 @@ public class BookEntity implements Book {
 
     @Override
     public String getAuthor() {
-        return idAuthor;
+        return uidAuthor;
     }
 
-    public void setIdAuthor(String idAuthor) {
-        this.idAuthor = idAuthor;
+    public void setUidAuthor(String idAuthor) {
+        this.uidAuthor = idAuthor;
     }
 
     @Override
     public String getCategory() {
-        return idCategory;
+        return uidCategory;
     }
 
-    public void setIdCategory(String idCategory) {
-        this.idCategory = idCategory;
+    public void setUidCategory(String idCategory) {
+        this.uidCategory = idCategory;
     }
 
     @Override
@@ -97,8 +97,8 @@ public class BookEntity implements Book {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("title", title);
-        result.put("idAuthor", idAuthor);
-        result.put("idCategory", idCategory);
+        result.put("idAuthor", uidAuthor);
+        result.put("idCategory", uidCategory);
         result.put("summary", summary);
         return result;
     }
@@ -109,7 +109,7 @@ public class BookEntity implements Book {
         if (obj == this) return true;
         if (!(obj instanceof BookEntity)) return false;
         BookEntity o = (BookEntity) obj;
-        return o.getIdBook().equals(this.getIdBook());
+        return o.getUid().equals(this.getUid());
     }
 
     @Override

@@ -14,7 +14,7 @@ public class AutorEntity implements Author {
 
     @Exclude
     @NonNull
-    private String idAuthor;
+    private String uid;
 
 
     private String firstName;
@@ -29,7 +29,6 @@ public class AutorEntity implements Author {
     private String birthday;
 
 
-    private Map<String, Boolean> books = new HashMap<String, Boolean>();
 
 
     public AutorEntity() {
@@ -44,12 +43,12 @@ public class AutorEntity implements Author {
 
 
     @Override
-    public String getIdAutor() {
-        return idAuthor;
+    public String getUid() {
+        return uid;
     }
 
-    public void setIdAuthor(String idAuthor) {
-        this.idAuthor = idAuthor;
+    public void setUid(String idAuthor) {
+        this.uid = idAuthor;
     }
 
     @Override
@@ -89,14 +88,7 @@ public class AutorEntity implements Author {
         this.biography = biography;
     }
 
-    @Override
-    public Map<String, Boolean> getBooks() {
-        return null;
-    }
 
-    public void setBooks(Map<String, Boolean> books) {
-        this.books = books;
-    }
 
 
     @Exclude
@@ -106,7 +98,6 @@ public class AutorEntity implements Author {
         result.put("lastName", lastName);
         result.put("birthday", birthday);
         result.put("biography", biography);
-        result.put("books", books);
         return result;
     }
 
@@ -118,7 +109,7 @@ public class AutorEntity implements Author {
         if (obj == this) return true;
         if (!(obj instanceof AutorEntity)) return false;
         AutorEntity o = (AutorEntity) obj;
-        return o.getIdAutor().equals(this.getIdAutor());
+        return o.getUid().equals(this.getUid());
     }
 
     @Override

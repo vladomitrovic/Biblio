@@ -10,7 +10,12 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class showAuthorsActivity extends AppCompatActivity {
@@ -19,6 +24,7 @@ public class showAuthorsActivity extends AppCompatActivity {
     ListView listAuthors;
     ArrayAdapter<AutorEntity> adapter;
     SearchView searchView;
+    List<AutorEntity> mAuthors;
 
 
     @Override
@@ -30,21 +36,36 @@ public class showAuthorsActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search_bar_author);
         listAuthors = findViewById(R.id.listAuthors);
 
+        mAuthors = new ArrayList<>();
+
         //add items in the listView
-        updateListAuthor();
+        FirebaseDatabase.getInstance()
+                .getReference("authors")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mAuthors.clear();
+                            mAuthors.addAll(toAuthors(dataSnapshot));
+                            adapter = new ArrayAdapter<AutorEntity>(showAuthorsActivity.this, android.R.layout.simple_list_item_1, mAuthors);
+                            listAuthors.setAdapter(adapter);
+                            //set listener on listView items
+                            listAuthors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    String uidAuthor = ((AutorEntity) listAuthors.getItemAtPosition(position)).getUid();
+                                    Intent intent = new Intent(showAuthorsActivity.this, DetailsAuthorActivity.class);
+                                    intent.putExtra("uidAuthor", uidAuthor);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
 
-
-        //set listener on listView items
-        listAuthors.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String authorId = ((AutorEntity) listAuthors.getItemAtPosition(position)).getIdAutor();
-
-                Intent intent = new Intent(showAuthorsActivity.this, DetailsAuthorActivity.class);
-                intent.putExtra("idAuthor", authorId);
-                startActivity(intent);
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
         //Behavior of searchView
         searchView.setIconifiedByDefault(false);
@@ -55,32 +76,26 @@ public class showAuthorsActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
                 String text = newText.toString();
                 adapter.getFilter().filter(newText);
-                return  true;
+                return true;
             }
         });
     }
 
 
-    //Update the list onRestart
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateListAuthor();
-    }
-
-    private void updateListAuthor() {
-        adapter = new ArrayAdapter<AutorEntity>(showAuthorsActivity.this, android.R.layout.simple_list_item_1, getAuthors());
-        adapter.notifyDataSetChanged();
-        listAuthors.setAdapter(adapter);
-    }
-
-    //Access database to get all authors
-    public List<AutorEntity> getAuthors(){
-        return null;
+    //Access database to get the Authors
+    private List<AutorEntity> toAuthors(DataSnapshot snapshot) {
+        List<AutorEntity> authors = new ArrayList<>();
+        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+            AutorEntity entity = childSnapshot.getValue(AutorEntity.class);
+            entity.setUid(childSnapshot.getKey());
+            authors.add(entity);
+        }
+        return authors;
     }
 
 

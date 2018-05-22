@@ -15,6 +15,11 @@ import com.caroline.vlado.biblio.Model.Category;
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
 import com.caroline.vlado.biblio.database.Entites.BookEntity;
 import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,8 +39,13 @@ public class AddBookActivity extends AppCompatActivity {
 
     BookEntity newBook;
     Toast errorToast;
-    Toast categorieORauthorNull;
     Toast toast;
+
+    ArrayAdapter<AutorEntity> dataAdapterAuthor;
+    ArrayList<AutorEntity> mAuthors;
+
+    ArrayAdapter<CategoryEntity> dataAdapterCategories;
+    ArrayList<CategoryEntity> mCategories;
 
     //Date components
     private DatePickerDialog datePickerDialog;
@@ -66,17 +76,55 @@ public class AddBookActivity extends AppCompatActivity {
 
         newBook = new BookEntity();
 
-        //add items in the spinner category
-        ArrayList<CategoryEntity> categories = null;
-        ArrayAdapter<CategoryEntity> dataAdapterCategories = new ArrayAdapter<CategoryEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, categories);
-        dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        category.setAdapter(dataAdapterCategories);
 
-        //add items in the spinner author
-        ArrayList<AutorEntity> authors = null;
-        ArrayAdapter<AutorEntity> dataAdapterAuthor = new ArrayAdapter<AutorEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, authors);
-        dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        author.setAdapter(dataAdapterAuthor);
+        mAuthors = new ArrayList<>();
+        FirebaseDatabase.getInstance()
+                .getReference("authors")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mAuthors.clear();
+                            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                AutorEntity entity = childSnapshot.getValue(AutorEntity.class);
+                                entity.setUid(childSnapshot.getKey());
+                                mAuthors.add(entity);
+                                dataAdapterAuthor = new ArrayAdapter<AutorEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, mAuthors);
+                                dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                author.setAdapter(dataAdapterAuthor);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+        mCategories = new ArrayList<>();
+        FirebaseDatabase.getInstance()
+                .getReference("categories")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mCategories.clear();
+                            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                CategoryEntity entity = childSnapshot.getValue(CategoryEntity.class);
+                                entity.setUid(childSnapshot.getKey());
+                                mCategories.add(entity);
+                                dataAdapterCategories = new ArrayAdapter<CategoryEntity>(AddBookActivity.this, android.R.layout.simple_spinner_item, mCategories);
+                                dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                category.setAdapter(dataAdapterCategories);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
 
 
 
@@ -86,6 +134,8 @@ public class AddBookActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
+
                 //Get current time
                 final Calendar c = Calendar.getInstance();
                 month = c.get(Calendar.MONTH);
@@ -122,7 +172,6 @@ public class AddBookActivity extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                 //Check if all field are filled
                     if(et_Title.getText().toString().matches("")
                             || et_Summary.getText().toString().matches("")
@@ -130,14 +179,14 @@ public class AddBookActivity extends AppCompatActivity {
                         errorToast.show();
                         return;
                     }
-
                 //set the name in the object
                 newBook.setTitle(et_Title.getText().toString());
                 newBook.setSummary(et_Summary.getText().toString());
                 newBook.setDate(dp_date.getText().toString());
-                    newBook.setIdAuthor(((AutorEntity) author.getSelectedItem()).getIdAutor());
-                    newBook.setIdCategory(((Category) category.getSelectedItem()).getIdCategory());
+                    newBook.setUidAuthor(((AutorEntity) author.getSelectedItem()).getUid());
+                    newBook.setUidCategory(((Category) category.getSelectedItem()).getUid());
 
+                    addBook(newBook);
 
                     //info toast
                 toast.show();
@@ -146,9 +195,22 @@ public class AddBookActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
 
+    private void addBook(final BookEntity book) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        database.getReference("books")
+                .push()
+                .setValue(book, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            toast.show();
+                        }
+                    }
+                });
+    }
 
 }
 

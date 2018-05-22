@@ -56,6 +56,7 @@ public class AddCategorieActivity extends AppCompatActivity {
                 newCategory.setCategoryName(et_category.getText().toString());
 
 
+
                 //add in the database
                 addCategory(newCategory);
 
@@ -67,17 +68,19 @@ public class AddCategorieActivity extends AppCompatActivity {
 
 
     private void addCategory(final CategoryEntity category) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("categories");
 
-        myRef.setValue(category, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    toast.show();
-                }
-            }
-        });
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        database.getReference("categories")
+                .push()
+                .setValue(category, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            toast.show();
+                        }
+                    }
+                });
     }
 
 

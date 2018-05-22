@@ -10,7 +10,13 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.caroline.vlado.biblio.database.Entites.BookEntity;
+import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class showBooksActivity extends AppCompatActivity {
@@ -20,6 +26,7 @@ public class showBooksActivity extends AppCompatActivity {
     ListView listBooks;
     SearchView searchView;
     ArrayAdapter<BookEntity> adapter;
+    List<BookEntity> mBooks;
 
 
     @Override
@@ -31,23 +38,39 @@ public class showBooksActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search_bar_book);
         listBooks = findViewById(R.id.listBooks);
 
+        mBooks = new ArrayList<>();
+
         //add items in the listView
-        updateListBook();
+        FirebaseDatabase.getInstance()
+                .getReference("books")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mBooks.clear();
+                            mBooks.addAll(toBook(dataSnapshot));
+                            adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, mBooks);
+                            listBooks.setAdapter(adapter);
+                            //set listener on listView items
+                            listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    String categoryId = ((CategoryEntity) listBooks.getItemAtPosition(position)).getUid();
 
-        //set listener on listView items
-        listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
+                                    intent.putExtra("idBook", ((BookEntity) listBooks.getItemAtPosition(position)).getUid());
+                                    intent.putExtra("idCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
+                                    intent.putExtra("idAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                    }
 
-                //Open DetailsBookActivity - Pass some values to get the details of the book
-                Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
-                intent.putExtra("idBook", ((BookEntity) listBooks.getItemAtPosition(position)).getIdBook());
-                intent.putExtra("idCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
-                intent.putExtra("idAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
-                startActivity(intent);
-            }
-        });
-
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
         //Behavior of searchView
         searchView.setIconifiedByDefault(false);
@@ -66,56 +89,17 @@ public class showBooksActivity extends AppCompatActivity {
         });
     }
 
-    //update the listView if we come back
-    @Override
-    public void onResume() {
-        super.onResume();
-        updateListBook();
-    }
 
-    //Update the listView depending of where we come from (Books from a specific category or specific author)
-    private void updateListBook(){
-        // get the fkAuthor or fkCategory if we access from Author or Category
-        int fkAuthor = getIntent().getIntExtra("idAuthor", -1);
-        int fkCategory = getIntent().getIntExtra("idCategory", -1);
-
-        //No intExtra --> allbooks
-        if(fkAuthor+fkCategory==-2) {
-            searchView.setQueryHint(getText(R.string.search));
-            adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, getBooks());
+    //Access database to get the Books
+    private List<BookEntity> toBook(DataSnapshot snapshot) {
+        List<BookEntity> books = new ArrayList<>();
+        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+            BookEntity entity = childSnapshot.getValue(BookEntity.class);
+            entity.setUid(childSnapshot.getKey());
+            books.add(entity);
         }
-        //No fkAuthor --> category
-        else if(fkAuthor==-1) {
-
-            adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, getFromCategory(fkCategory));
-        }
-        //Other --> author
-        else {
-
-            adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, getFromAuthor(fkAuthor));
-        }
-        adapter.notifyDataSetChanged();
-        listBooks.setAdapter(adapter);
+        return books;
     }
-
-
-    //get all books from database
-    public List<BookEntity> getBooks(){
-        return null;
-    }
-
-    //get all books from a specific author
-    public List<BookEntity> getFromAuthor(int idAuthor) {
-        return null;
-    }
-
-    //get all books from a specific category
-    public List<BookEntity> getFromCategory(int idCategory) {
-        return null;
-    }
-
-
-
 
     //Open addBookactivity
     public void addBook(View view) {

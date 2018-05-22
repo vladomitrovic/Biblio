@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -111,6 +114,8 @@ public class AddAuthorActivity extends AppCompatActivity {
                 newAuthor.setBiography(et_bio.getText().toString());
                 newAuthor.setBirthday(dp_date.getText().toString());
 
+                addAuthor(newAuthor);
+
 
                 //info toast
                 toast.show();
@@ -121,5 +126,22 @@ public class AddAuthorActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private void addAuthor(final AutorEntity author) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        database.getReference("authors")
+                .push()
+                .setValue(author, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        if (databaseError == null) {
+                            toast.show();
+                        }
+                    }
+                });
+    }
+
 
 }

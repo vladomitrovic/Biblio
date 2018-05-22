@@ -1,7 +1,7 @@
 package com.caroline.vlado.biblio.Model;
 
 public interface Book {
-    String getIdBook();
+    String getUid();
     String getTitle();
     String getDate();
 

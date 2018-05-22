@@ -164,8 +164,8 @@ public class DetailsBookActivity extends AppCompatActivity {
                 thisBook.setTitle(et_Title.getText().toString());
                 thisBook.setSummary(et_Summary.getText().toString());
                 thisBook.setDate(dp_date.getText().toString());
-                thisBook.setIdAuthor(((AutorEntity) author.getSelectedItem()).getIdAutor());
-                thisBook.setIdCategory(((Category) category.getSelectedItem()).getIdCategory());
+                thisBook.setUidAuthor(((AutorEntity) author.getSelectedItem()).getUid());
+                thisBook.setUidCategory(((Category) category.getSelectedItem()).getUid());
 
                 System.out.println(thisBook.getSummary()+"-----"+thisBook.getTitle()+"-------------------");
 

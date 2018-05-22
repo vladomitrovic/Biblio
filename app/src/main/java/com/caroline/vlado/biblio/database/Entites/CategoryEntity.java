@@ -14,11 +14,12 @@ public class CategoryEntity implements Category {
 
 
         @NonNull
-        private String idCategory;
+        private String uid;
 
         private String categoryName;
 
-    private Map<String, Boolean> books = new HashMap<String, Boolean>();
+
+    //private Map<String, Boolean> books = new HashMap<String, Boolean>();
 
 
     public CategoryEntity() {
@@ -26,19 +27,19 @@ public class CategoryEntity implements Category {
         }
 
     public CategoryEntity(Category category) {
-        idCategory = category.getIdCategory();
+        uid = category.getUid();
         categoryName = category.getCategoryName();
-        books = category.getBooks();
+        //books = category.getBooks();
     }
 
     @Exclude
     @Override
-    public String getIdCategory() {
-        return idCategory;
+    public String getUid() {
+        return uid;
     }
 
-    public void setIdCategory(@NonNull String idCategory) {
-        this.idCategory = idCategory;
+    public void setUid(@NonNull String idCategory) {
+        this.uid = idCategory;
     }
 
     @Override
@@ -53,18 +54,18 @@ public class CategoryEntity implements Category {
 
     @Override
     public Map<String, Boolean> getBooks() {
-        return books;
+        return null;
     }
 
     public void setBooks(Map<String, Boolean> books) {
-        this.books = books;
+        //this.books = books;
     }
 
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("categoryName", categoryName);
-        result.put("books", books);
+        //result.put("books", books);
         return result;
     }
 
@@ -76,7 +77,7 @@ public class CategoryEntity implements Category {
             if (obj == this) return true;
             if (!(obj instanceof CategoryEntity)) return false;
             CategoryEntity o = (CategoryEntity) obj;
-            return o.getIdCategory().equals(this.getIdCategory());
+        return o.getUid().equals(this.getUid());
         }
 
     @Override
