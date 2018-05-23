@@ -16,6 +16,11 @@ import com.caroline.vlado.biblio.Model.Category;
 import com.caroline.vlado.biblio.database.Entites.AutorEntity;
 import com.caroline.vlado.biblio.database.Entites.BookEntity;
 import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,17 +48,15 @@ public class DetailsBookActivity extends AppCompatActivity {
     BookEntity thisBook;
     AutorEntity thisAuthor;
     CategoryEntity thisCategory;
-
-
+    ArrayList<CategoryEntity> mCategories;
+    ArrayAdapter<CategoryEntity> dataAdapterCategories;
+    ArrayList<AutorEntity> mAuthors;
+    ArrayAdapter<AutorEntity> dataAdapterAuthor;
     //Date components
     private DatePickerDialog datePickerDialog;
     private int month;
     private int year;
     private int day;
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,27 +74,119 @@ public class DetailsBookActivity extends AppCompatActivity {
         category = findViewById(R.id.sp_add_book_categorie);
         seeAuthor = findViewById(R.id.seeAuthors);
 
-        //add items in the listView category
-        ArrayList<CategoryEntity> categories = null;
-        ArrayAdapter<CategoryEntity> dataAdapterCategories = new ArrayAdapter<CategoryEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, categories);
-        dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        category.setAdapter(dataAdapterCategories);
-
-        //add items in the listView author
-        ArrayList<AutorEntity> authors = null;
-        ArrayAdapter<AutorEntity> dataAdapterAuthor = new ArrayAdapter<AutorEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, authors);
-        dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        author.setAdapter(dataAdapterAuthor);
 
         //get some values to get the details of the book
-        int idBook = getIntent().getIntExtra("idBook", -1);
-        int idAuthor = getIntent().getIntExtra("idAuthor", -1);
-        int idCategory = getIntent().getIntExtra("idCategory", -1);
+        final String uidBook = getIntent().getStringExtra("uidBook");
+        String uidAuthor = getIntent().getStringExtra("uidAuthor");
+        String uidCategory = getIntent().getStringExtra("uidCategory");
+
+
+        mAuthors = new ArrayList<>();
+        FirebaseDatabase.getInstance()
+                .getReference("authors")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mAuthors.clear();
+                            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                AutorEntity entity = childSnapshot.getValue(AutorEntity.class);
+                                entity.setUid(childSnapshot.getKey());
+                                mAuthors.add(entity);
+                                dataAdapterAuthor = new ArrayAdapter<AutorEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, mAuthors);
+                                dataAdapterAuthor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                author.setAdapter(dataAdapterAuthor);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+        mCategories = new ArrayList<>();
+        FirebaseDatabase.getInstance()
+                .getReference("categories")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            mCategories.clear();
+                            for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                                CategoryEntity entity = childSnapshot.getValue(CategoryEntity.class);
+                                entity.setUid(childSnapshot.getKey());
+                                mCategories.add(entity);
+                                dataAdapterCategories = new ArrayAdapter<CategoryEntity>(DetailsBookActivity.this, android.R.layout.simple_spinner_item, mCategories);
+                                dataAdapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                category.setAdapter(dataAdapterCategories);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+        //get the author from the database
+        thisAuthor = new AutorEntity();
+        FirebaseDatabase.getInstance()
+                .getReference("authors/" + uidAuthor)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            thisAuthor = dataSnapshot.getValue(AutorEntity.class);
+                            thisBook.setUid(uidBook);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+        //get the category from the database
+        thisCategory = new CategoryEntity();
+        FirebaseDatabase.getInstance()
+                .getReference("categories/" + uidCategory)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            thisCategory = dataSnapshot.getValue(CategoryEntity.class);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
 
         //get the details from the database
-        thisBook = null;
-        thisAuthor = null;
-        thisCategory = null;
+        FirebaseDatabase.getInstance()
+                .getReference("books/" + uidBook)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            thisBook = dataSnapshot.getValue(BookEntity.class);
+                            //set the editText from details
+                            et_Title.setText(thisBook.getTitle());
+                            et_Summary.setText(thisBook.getSummary());
+                            dp_date.setText(thisBook.getDate());
+                            author.setSelection(getIndex(author, thisAuthor.toString()));
+                            category.setSelection(getIndex(category, thisCategory.toString()));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
 
         // instance of toast
         errorToast = Toast.makeText(this, getString(R.string.FillAll), Toast.LENGTH_SHORT);
@@ -99,12 +194,7 @@ public class DetailsBookActivity extends AppCompatActivity {
         deleteToast = Toast.makeText(this, getString(R.string.itemDeleted), Toast.LENGTH_SHORT);
 
 
-        //set the editText from details
-        et_Title.setText(thisBook.getTitle());
-        et_Summary.setText(thisBook.getSummary());
-        dp_date.setText(thisBook.getDate());
-        author.setSelection(getIndex(author, thisAuthor.toString()));
-        category.setSelection(getIndex(category, thisCategory.toString()));
+
 
         //disable the unused button and editText to avoid modification
         done.setEnabled(false);
@@ -141,9 +231,18 @@ public class DetailsBookActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                deleteToast.show();
-                onBackPressed();
+                //update in database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                database.getReference("books/" + uidBook)
+                        .setValue(null, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    deleteToast.show();
+                                    onBackPressed();
+                                }
+                            }
+                        });
             }
         });
 
@@ -167,8 +266,17 @@ public class DetailsBookActivity extends AppCompatActivity {
                 thisBook.setUidAuthor(((AutorEntity) author.getSelectedItem()).getUid());
                 thisBook.setUidCategory(((Category) category.getSelectedItem()).getUid());
 
-                System.out.println(thisBook.getSummary()+"-----"+thisBook.getTitle()+"-------------------");
-
+                //update in database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                database.getReference("books/" + uidBook)
+                        .setValue(thisBook, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    doneToast.show();
+                                }
+                            }
+                        });
 
 
                 //update in database
@@ -194,8 +302,9 @@ public class DetailsBookActivity extends AppCompatActivity {
         seeAuthor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println("-------------uidAuthor send ----------" + ((AutorEntity) author.getSelectedItem()).getUid());
                 Intent intent = new Intent(DetailsBookActivity.this, DetailsAuthorActivity.class);
-                intent.putExtra("idAuthor", thisBook.getAuthor());
+                intent.putExtra("uidAuthor", ((AutorEntity) author.getSelectedItem()).getUid());
                 startActivity(intent);
             }
         });

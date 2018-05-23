@@ -10,7 +10,6 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.caroline.vlado.biblio.database.Entites.BookEntity;
-import com.caroline.vlado.biblio.database.Entites.CategoryEntity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,39 +37,111 @@ public class showBooksActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search_bar_book);
         listBooks = findViewById(R.id.listBooks);
 
+        final String uidAuthor = getIntent().getStringExtra("uidAuthor");
+        final String uidCategory = getIntent().getStringExtra("uidCategory");
+        System.out.println("--------uidCategory =" + uidCategory);
+        System.out.println("--------uidAuthor =" + uidAuthor);
+
         mBooks = new ArrayList<>();
 
-        //add items in the listView
-        FirebaseDatabase.getInstance()
-                .getReference("books")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            mBooks.clear();
-                            mBooks.addAll(toBook(dataSnapshot));
-                            adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, mBooks);
-                            listBooks.setAdapter(adapter);
-                            //set listener on listView items
-                            listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    String categoryId = ((CategoryEntity) listBooks.getItemAtPosition(position)).getUid();
-
-                                    Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
-                                    intent.putExtra("idBook", ((BookEntity) listBooks.getItemAtPosition(position)).getUid());
-                                    intent.putExtra("idCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
-                                    intent.putExtra("idAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
-                                    startActivity(intent);
-                                }
-                            });
+        //add items in the listView for category
+        if (uidCategory != "" && uidAuthor == "") {
+            FirebaseDatabase.getInstance()
+                    .getReference("books")
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                mBooks.clear();
+                                mBooks.addAll(toBook(dataSnapshot));
+                                adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, mBooks);
+                                listBooks.setAdapter(adapter);
+                                //set listener on listView items
+                                listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
+                                        intent.putExtra("uidBook", ((BookEntity) listBooks.getItemAtPosition(position)).getUid());
+                                        intent.putExtra("uidCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
+                                        intent.putExtra("uidAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
+
+        //add items in the listView for AUTHORS
+        if (uidAuthor != "") {
+            FirebaseDatabase.getInstance()
+                    .getReference("books")
+                    .orderByChild("author").equalTo(uidAuthor)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                mBooks.clear();
+                                mBooks.addAll(toBook(dataSnapshot));
+                                adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, mBooks);
+                                listBooks.setAdapter(adapter);
+                                //set listener on listView items
+                                listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
+                                        intent.putExtra("uidBook", ((BookEntity) listBooks.getItemAtPosition(position)).getUid());
+                                        intent.putExtra("uidCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
+                                        intent.putExtra("uidAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
+
+        //add items in the listView for CATEGORIES
+        if (uidCategory != "") {
+            FirebaseDatabase.getInstance()
+                    .getReference("books")
+                    .orderByChild("category").equalTo(uidCategory)
+                    .addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                mBooks.clear();
+                                mBooks.addAll(toBook(dataSnapshot));
+                                adapter = new ArrayAdapter<BookEntity>(showBooksActivity.this, android.R.layout.simple_list_item_1, mBooks);
+                                listBooks.setAdapter(adapter);
+                                //set listener on listView items
+                                listBooks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        Intent intent = new Intent(showBooksActivity.this, DetailsBookActivity.class);
+                                        intent.putExtra("uidBook", ((BookEntity) listBooks.getItemAtPosition(position)).getUid());
+                                        intent.putExtra("uidCategory", ((BookEntity) listBooks.getItemAtPosition(position)).getCategory());
+                                        intent.putExtra("uidAuthor", ((BookEntity) listBooks.getItemAtPosition(position)).getAuthor());
+                                        startActivity(intent);
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+        }
+
 
         //Behavior of searchView
         searchView.setIconifiedByDefault(false);

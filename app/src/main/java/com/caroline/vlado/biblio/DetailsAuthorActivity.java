@@ -72,6 +72,7 @@ public class DetailsAuthorActivity extends AppCompatActivity {
 
         //get idAuthor from previous activity
         final String uidAuthor = getIntent().getStringExtra("uidAuthor");
+        System.out.println("-------------uidAuthor get ----------" + uidAuthor);
 
         //get the details from the database
         FirebaseDatabase.getInstance()
@@ -81,6 +82,7 @@ public class DetailsAuthorActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             thisAuthor = dataSnapshot.getValue(AutorEntity.class);
+                            thisAuthor.setUid(uidAuthor);
                             //set the editText from details
                             et_fistname.setText(thisAuthor.getFirstName());
                             et_lastname.setText(thisAuthor.getLastName());
@@ -132,8 +134,18 @@ public class DetailsAuthorActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteToast.show();
-                onBackPressed();
+                //update in database
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                database.getReference("authors/" + uidAuthor)
+                        .setValue(null, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError == null) {
+                                    deleteToast.show();
+                                    onBackPressed();
+                                }
+                            }
+                        });
             }
         });
 
@@ -158,6 +170,7 @@ public class DetailsAuthorActivity extends AppCompatActivity {
                 thisAuthor.setBiography(et_bio.getText().toString());
                 thisAuthor.setBirthday(dp_date.getText().toString());
 
+                //update in database
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
 
                 database.getReference("authors/" + uidAuthor)
@@ -169,8 +182,6 @@ public class DetailsAuthorActivity extends AppCompatActivity {
                                 }
                             }
                         });
-
-                //update in database
 
                 //switch to view mode
                 delete.setEnabled(false);
