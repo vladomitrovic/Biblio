@@ -45,36 +45,6 @@ public class showCategoriesActivity extends AppCompatActivity {
         mCategories = new ArrayList<>();
 
         //add items in the listView
-        updateListCategories();
-
-        //Behavior of searchView
-        searchView.setIconifiedByDefault(false);
-        searchView.setSubmitButtonEnabled(true);
-        searchView.setQueryHint(getText(R.string.search));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                String text = newText.toString();
-                adapter.getFilter().filter(newText);
-                return true;
-            }
-        });
-    }
-
-    //update the listView if we come back
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        updateListCategories();
-    }
-
-
-    private void updateListCategories() {
         FirebaseDatabase.getInstance()
                 .getReference("categories")
                 .addValueEventListener(new ValueEventListener() {
@@ -166,7 +136,26 @@ public class showCategoriesActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
+
+        //Behavior of searchView
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(true);
+        searchView.setQueryHint(getText(R.string.search));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                String text = newText.toString();
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
     }
+
 
     //Access database to get the categories
     private List<CategoryEntity> toCategories(DataSnapshot snapshot) {

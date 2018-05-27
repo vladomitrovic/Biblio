@@ -40,4 +40,10 @@
     <string name="language">Lingua</string>
     <string name="bio">Biografia</string>
     <string name="catORauthNull">Devi avere una categoria e un autore per creare un libro.</string>
+    <string name="DeleteCategory">Elimina</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="questionDeleteCategory">Vuoi eliminare la categoria?</string>
+    <string name="questionLongclickCategory">Vuoi modificare o eliminare la categoria?</string>
+    <string name="modifyCategory">Modifica</string>
 </resources>

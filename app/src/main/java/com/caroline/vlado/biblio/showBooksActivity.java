@@ -44,8 +44,8 @@ public class showBooksActivity extends AppCompatActivity {
 
         mBooks = new ArrayList<>();
 
-        //add items in the listView for category
-        if (uidCategory != "" && uidAuthor == "") {
+        //add items in the listView
+        if (uidCategory == null && uidAuthor == null) {
             FirebaseDatabase.getInstance()
                     .getReference("books")
                     .addValueEventListener(new ValueEventListener() {
@@ -77,7 +77,7 @@ public class showBooksActivity extends AppCompatActivity {
         }
 
         //add items in the listView for AUTHORS
-        if (uidAuthor != "") {
+        if (uidAuthor != null) {
             FirebaseDatabase.getInstance()
                     .getReference("books")
                     .orderByChild("author").equalTo(uidAuthor)
@@ -110,7 +110,7 @@ public class showBooksActivity extends AppCompatActivity {
         }
 
         //add items in the listView for CATEGORIES
-        if (uidCategory != "") {
+        if (uidCategory != null) {
             FirebaseDatabase.getInstance()
                     .getReference("books")
                     .orderByChild("category").equalTo(uidCategory)
