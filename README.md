@@ -21,26 +21,24 @@ Database on firebase
 structure :
 
 authors
-	authorUid
-		Firstname
-		Lastname
-		Bday
-		Bio
+-authorUid
+--Firstname
+--Lastname
+--Bday
+--Bio
 
 books
-	bookUid
-		title
-		date
-		summary
-		author : authorUid
-		category : categoryUid
+-bookUid
+--title
+--date
+--summary
+--author : authorUid
+--category : categoryUid
 
 
 categories
-	categoryUid
-		name
-
-
+-categoryUid
+--name
 
 
 III. Fonctionalities
